@@ -1,6 +1,6 @@
 import 'package:expenses.dart/models/expense.dart';
-import 'package:expenses.dart/widgets/NewExpense.dart';
 import 'package:expenses.dart/widgets/expenses_list/expenses_list.dart';
+import 'package:expenses.dart/widgets/new_expense.dart';
 import 'package:flutter/material.dart';
 
 class Expenses extends StatefulWidget {
@@ -40,9 +40,22 @@ class _ExpensesState extends State<Expenses> {
 
   void _openAddExpenseOverlay() {
     showModalBottomSheet(
+      isScrollControlled: true,
       context: context,
-      builder: (context) => const NewExpense(),
+      builder: (context) => NewExpense(onAddExpense: _addExpense),
     );
+  }
+
+  void _addExpense(Expense expense) {
+    setState(() {
+      _list.add(expense);
+    });
+  }
+
+  void _removeExpense(Expense expense) {
+    setState(() {
+      _list.remove(expense);
+    });
   }
 
   @override
@@ -60,7 +73,11 @@ class _ExpensesState extends State<Expenses> {
       body: Column(
         children: [
           const Text("The Chart"),
-          Expanded(child: ExpensesList(list: _list)),
+          Expanded(
+              child: ExpensesList(
+            list: _list,
+            onRemoveExpense: _removeExpense,
+          )),
         ],
       ),
     );
