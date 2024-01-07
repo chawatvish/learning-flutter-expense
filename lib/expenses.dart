@@ -1,4 +1,5 @@
 import 'package:expenses.dart/models/expense.dart';
+import 'package:expenses.dart/widgets/chart/chart.dart';
 import 'package:expenses.dart/widgets/expenses_list/expenses_list.dart';
 import 'package:expenses.dart/widgets/new_expense.dart';
 import 'package:flutter/material.dart';
@@ -76,6 +77,8 @@ class _ExpensesState extends State<Expenses> {
 
   @override
   Widget build(BuildContext context) {
+    final width = MediaQuery.of(context).size.width;
+
     Widget mainContent;
     if (_list.isEmpty) {
       mainContent = const Center(
@@ -98,11 +101,18 @@ class _ExpensesState extends State<Expenses> {
           )
         ],
       ),
-      body: Column(
-        children: [
-          const Text("The Chart"),
-          Expanded(child: mainContent),
-        ],
+      body: SafeArea(
+        child: width < 600 ? Column(
+          children: [
+            Chart(expenses: _list),
+            Expanded(child: mainContent),
+          ],
+        ) : Row(
+          children: [
+            Expanded(child: Chart(expenses: _list)),
+            Expanded(child: mainContent),
+          ],
+        ),
       ),
     );
   }
